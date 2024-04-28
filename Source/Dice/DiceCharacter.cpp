@@ -19,7 +19,7 @@ ADiceCharacter::ADiceCharacter()
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
-	// Set default health value
+	// 체력 default 값은 100
 	Health = 100.0f;
 		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
@@ -74,22 +74,23 @@ void ADiceCharacter::BeginPlay()
 
 //////////////////////////////////////////////////////////////////////////
 // Input
+
+// health 수치 업데이트
 void ADiceCharacter::UpdateHealth(float DeltaHealth)
 {
 	Health += DeltaHealth;
 
-	// Ensure health does not exceed limits
+
 	Health = FMath::Clamp(Health, 0.0f, 100.0f);
 }
 
-// Function to check and alert health
+// health 수치 alert
 void ADiceCharacter::CheckAndAlertHealth()
 {
-	// Alert health
+	
 	FString HealthMessage = FString::Printf(TEXT("Current Health: %.2f"), Health);
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, HealthMessage);
 
-	// You can replace the on-screen message with any other method of alerting the player
 }
 
 void ADiceCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

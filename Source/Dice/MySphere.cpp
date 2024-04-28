@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "MySphere.h"
 #include "Components/SphereComponent.h"
@@ -8,34 +6,35 @@
 #include "Engine.h"
 #include "DiceCharacter.h"
 
-// Sets default values
+    // Sets default values
 AMySphere::AMySphere()
 {
     // Set this actor to call Tick() every frame.  
     PrimaryActorTick.bCanEverTick = true;
 
-    // Create and attach a static mesh component.
+    // 스태틱 메시 생성
     SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
     RootComponent = SphereMesh;
 
-    // Set the static mesh to a sphere.
+    // 스태틱 메시 설정
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMeshAsset(TEXT("/Script/Engine.StaticMesh'/Game/Mesh/SM_Cylinder.SM_Cylinder'"));
     if (SphereMeshAsset.Succeeded())
     {
         SphereMesh->SetStaticMesh(SphereMeshAsset.Object);
     }
 
-    // Setup collision to ignore all but allow pawn to pass through.
+    // 스테틱 메시에 대한 충돌 설정
     SphereMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     SphereMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 
+    // 스테틱 메시 생성시 랜덤한 위치 설정 , x,y, 좌표만 
     float RandomX = FMath::RandRange(-5000.0f, 5000.0f);
     float RandomY = FMath::RandRange(-5000.0f, 5000.0f);
 
+    // 생성 위치, 스케일 조정. 실린더로 생성시 locatiion z 인자는 -100 고정
     SphereMesh->SetRelativeLocation(FVector(RandomX, RandomY, -100.0f));
     SphereMesh->SetWorldScale3D(FVector(100.0f, 100.0f, 100.0f));
   
-   
 
 }
 
@@ -50,29 +49,31 @@ void AMySphere::BeginPlay()
 }
 
 	
-
 // Called every frame
 void AMySphere::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    // 스태틱 메시의 크기 감소 예제
+    // 스태틱 메시의 크기 감소 
     FVector NewScale = GetActorScale3D() - FVector(DeltaTime, DeltaTime, 0);
     if (NewScale.X > 1.0f)
     {
         SetActorScale3D(NewScale);
     }
 
+
+    //자기장 밖에 위치해 있을 시 처리
     static float ElapsedTime = 0.0f;
     ElapsedTime += DeltaTime;
-
-    // 1초가 지날 때마다 health를 감소시킵니다.
+    // 1초가 지날 때마다 health를 감소
     if (ElapsedTime >= 1.0f)
     {
         CheckCharacterPositionAndReduceHealth(DeltaTime);
         ElapsedTime = 0.0f; // 타이머를 초기화
     }
 }
+
+// 캐릭터의 위치 확인 및 health 감소 함수
 
 void AMySphere::CheckCharacterPositionAndReduceHealth(float DeltaTime)
 {
@@ -84,9 +85,9 @@ void AMySphere::CheckCharacterPositionAndReduceHealth(float DeltaTime)
         FVector SphereOrigin = GetActorLocation();
 
         // 스태틱 메시의 현재 스케일
-        float SphereScale = GetActorScale3D().X; // X, Y, Z 스케일을 모두 고려할 수 있습니다.
+        float SphereScale = GetActorScale3D().X; 
 
-        // 스태틱 메시의 기본 크기 (가정: 기본 반지름 50)
+        // 스태틱 메시의 기본 크기 default = 50
         float BaseRadius = 50.0f;
 
         // 스태틱 메시의 현재 반지름 계산
@@ -95,10 +96,10 @@ void AMySphere::CheckCharacterPositionAndReduceHealth(float DeltaTime)
         // 캐릭터와 스태틱 메시의 거리를 계산
         float Distance = FVector::Dist(Character->GetActorLocation(), SphereOrigin);
 
-        // 만약 캐릭터가 메시의 반지름 밖에 있다면, health를 감소시킵니다.
+        // 만약 캐릭터가 메시의 반지름 밖에 있다면, health를 감소
         if (Distance > SphereRadius)
         {
-            Character->UpdateHealth(-5.0f); // 정확하게 5씩 감소
+            Character->UpdateHealth(-5.0f); // ex) 5씩 감소
         }
     }
 }

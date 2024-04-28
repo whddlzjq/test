@@ -20,8 +20,6 @@ protected:
 	virtual void BeginPlay() override;
 
 
-
-
 private:
 	// Timer handle for delayed sphere spawn
 	FTimerHandle SpawnTimerHandle;

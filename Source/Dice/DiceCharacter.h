@@ -62,7 +62,7 @@ protected:
 
 
 
-	// Function to check and alert health
+	// health 수치 확인
 	void CheckAndAlertHealth();
 
 	// Timer handle for health alert
@@ -74,7 +74,7 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	// Function to update health
+	// health 시스템 
 	void UpdateHealth(float DeltaHealth);
 };
 
